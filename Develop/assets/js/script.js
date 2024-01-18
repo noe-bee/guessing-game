@@ -1,11 +1,18 @@
 // DOM elements needed
+var wordblanks = document.querySelector(".word-blanks");
 // TODO: Grab the HTML element that holds the blanks (it is the div with class 'word-blanks')
+var wins = document.querySelector(".win");
 // TODO: Grab the HTML element that holds the wins counter (it is the span with class 'win')
+var losses = document.querySelector(".lose");
 // TODO: Grab the HTML element that holds the losses counter (it is the span with class 'lose')
+var timerElement = document.querySelector(".timer-count");
 // TODO: Grab the HTML element that holds the time left (it is the div with class 'timer-count')
+var timeLeft = document.querySelector(".timer-count");
 // TODO: Grab the Start button
+var startButton = document.querySelector(".start-button");
 
 // Global variables needed
+
 // Array of words the user will guess
 var words = [
 	'variable',
@@ -17,16 +24,26 @@ var words = [
 	'boolean',
 ];
 // TODO: Declare additional global variables as needed - you will decide as you progress through coding this game
+var timeLeft; //resetting this inside the startGame function
+var timerInterval;
+var wordFound; //this will be a boolean
 
 // The startGame function is called when the start button is clicked
 function startGame() {
+	// console.log('game started'); to check that its working..
 	// TODO: Reset the time left, as well as any other global variables as needed
+	timeLeft = 20;
+	wordFound = false;
 	// TODO: Call the 'renderBlanks' function
+	renderBlanks();
 	// TODO: Call the 'setTimer' function
+	setTimer();
 	// TODO (Optional): Disable the start button, so it cannot be clicked when round is in progress
 }
 
 // TODO: Attach an event listener to the start button to call the 'startGame' function on click
+startButton.addEventListener('click', startGame)
+
 
 // Function to display blanks ('_') on screen
 function renderBlanks() {
@@ -38,6 +55,19 @@ function renderBlanks() {
 // Function to control the timer
 function setTimer() {
 	// TODO: Set the timer using setInterval(). Every second, decrement the time left by 1 and check if you need to stop the timer either because the user has found the hidden word or because there is no time left.
+	var timerInterval = setInterval(function() {
+		console.log('timeLeft:', timeLeft);
+		timeLeft--;
+		timerElement.textContent = timeLeft;
+		if (timeLeft === 0) {
+			clearInterval(timerInterval);
+			console.log("time's up!")
+		}
+		if (wordFound) {
+			clearInterval(timerInterval);
+			console.log("wow! you got it!")
+		}
+	}, 2000); //takes two arguments
 	/* Hints:
   - If the user has found the hidden word in time, then stop the timer (use clearInterval()) and invoke the 'winGame' function
   - If there is no time left, then stop the timer (use clearInterval()) and invoke the 'loseGame' function
@@ -72,11 +102,27 @@ document.addEventListener('keydown', function (event) {
 // Function to retrieve the number of wins stored in local storage. This function is used in the init function.
 function getWins() {
 	// TODO: Get stored value from local storage and display it on the page. If there was nothing retrieved from local storage then set the number of wins to 0
+	var numWins = localStorage.getItem('winCount') //how are we gonna call the wins in local storage? key is winCount and value is the number
+	// console.log('numWins:', numWins)
+	wins.textContent = numWins; //to update the win count
+	if (numWins === null) {
+		wins.textContent = 0;
+	} else {
+		wins.textContent = numWins;
+	}
 }
 
 // Function to retrieve the number of losses stored in local storage. This function is used in the init function.
 function getlosses() {
 	// TODO: Get stored value from local storage and display it on the page. If there was nothing retrieved from local storage then set the number of losses to 0
+	var numLosses = localStorage.getItem('lossCount') //how are we gonna call the losses in local storage? key is lossCount and value is the number
+	// console.log('numWins:', numWins)
+	losses.textContent = numLosses; //to update the win count
+	if (numLosses === null) {
+		losses.textContent = 0;
+	} else {
+		losses.textContent = numLoss;
+	}
 }
 
 // The init function is called when the page loads
